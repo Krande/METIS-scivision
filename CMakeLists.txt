@@ -12,6 +12,7 @@ VERSION 5.1.0.4
 enable_testing()
 
 option(BUILD_TESTING "Build METIS self-tests" ON)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
 
 if(NOT intsize)
   set(intsize 32)

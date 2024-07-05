@@ -6,6 +6,8 @@ set(GKLIB_PATH ${PROJECT_SOURCE_DIR})
 include(GKlibSystem.cmake)
 
 add_library(GKlib STATIC ${GKlib_sources})
+#target_link_options(GKlib PRIVATE /DEF:CMakeFiles/metis.dir/./exports.def)
+
 target_link_libraries(GKlib PRIVATE $<$<BOOL:${UNIX}>:m>)
 target_include_directories(GKlib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
