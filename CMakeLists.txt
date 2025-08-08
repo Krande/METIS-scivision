@@ -6,7 +6,7 @@ endif()
 
 project(metis
 LANGUAGES C
-VERSION 5.2.1.2
+VERSION 5.2.1.3
 )
 # based on upstream e0f1b88b8efcb24ffa0ec55eabb78fbe61e58ae7
 
