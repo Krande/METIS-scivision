@@ -42,7 +42,6 @@ add_library(metis)
 target_include_directories(metis PUBLIC
 "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libmetis;${CMAKE_CURRENT_SOURCE_DIR}/include>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(metis
 PUBLIC GKlib::GKlib $<$<BOOL:${UNIX}>:m>
