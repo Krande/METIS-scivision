@@ -75,7 +75,6 @@ endif(HAVE_GETLINE)
 
 # Custom check for TLS.
 if(MSVC)
- list(APPEND GKlib_COPTIONS __thread=__declspec(thread))
 
   # This if checks if that value is cached or not.
   if("${HAVE_THREADLOCALSTORAGE}" MATCHES "^${HAVE_THREADLOCALSTORAGE}$")
