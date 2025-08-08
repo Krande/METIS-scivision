@@ -75,9 +75,7 @@ endif(HAVE_GETLINE)
 
 # Custom check for TLS.
 if(MSVC)
-
-  # This if checks if that value is cached or not.
-  if("${HAVE_THREADLOCALSTORAGE}" MATCHES "^${HAVE_THREADLOCALSTORAGE}$")
+  if(NOT DEFINED HAVE_THREADLOCALSTORAGE)
     message(CHECK_START "checking for thread-local storage")
     try_compile(HAVE_THREADLOCALSTORAGE
       ${CMAKE_BINARY_DIR}
