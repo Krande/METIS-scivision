@@ -1,33 +1,30 @@
-cmake_minimum_required(VERSION 3.14...3.28)
+cmake_minimum_required(VERSION 3.20...4.1)
 
-if(NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug or Release")
 endif()
 
 project(metis
 LANGUAGES C
-VERSION 5.2.1.1
+VERSION 5.2.1.2
 )
 # based on upstream e0f1b88b8efcb24ffa0ec55eabb78fbe61e58ae7
 
 enable_testing()
 
-include(FetchContent)
+include(GNUInstallDirs)
+include(cmake/GitSubmodule.cmake)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND metis_IS_TOP_LEVEL)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/local" CACHE PATH "install prefix" FORCE)
 endif()
 
-option(BUILD_TESTING "Build METIS self-tests" ON)
+option(BUILD_TESTING "Build METIS self-tests")
 
 message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} CMake ${CMAKE_VERSION} install prefix ${CMAKE_INSTALL_PREFIX}")
 
-FetchContent_Declare(GKlib
-GIT_REPOSITORY https://github.com/scivision/GKlib.git
-GIT_TAG 6897bfe
-GIT_SHALLOW true
-)
-FetchContent_MakeAvailable(GKlib)
+git_submodule(${CMAKE_CURRENT_SOURCE_DIR}/GKlib)
+add_subdirectory(GKlib)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -43,14 +40,16 @@ install(FILES include/metis.h TYPE INCLUDE)
 # Build libmetis.
 add_library(metis)
 target_include_directories(metis PUBLIC
-$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libmetis>
-$<INSTALL_INTERFACE:include>
-PRIVATE ${PROJECT_SOURCE_DIR}/include ${gklib_SOURCE_DIR}
+"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libmetis;${CMAKE_CURRENT_SOURCE_DIR}/include>"
+$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 target_link_libraries(metis
-PUBLIC GKlib
-PRIVATE $<$<BOOL:${UNIX}>:m>
+PUBLIC GKlib::GKlib $<$<BOOL:${UNIX}>:m>
 )
+
+add_library(metis::metis INTERFACE IMPORTED GLOBAL)
+target_link_libraries(metis::metis INTERFACE metis)
 
 install(TARGETS metis EXPORT ${PROJECT_NAME}-targets)
 
